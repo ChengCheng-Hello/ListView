@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 带更多功能的ListView -->
+    <declare-styleable name="TXPTRAndLMBase">
+        <!-- 布局页面 -->
+        <attr name="txMainLayoutId" format="reference" />
+        <!-- 数据头部布局 -->
+        <attr name="txLayoutHeader" format="reference" />
+        <!-- 首次加载中布局 -->
+        <attr name="txLayoutLoading" format="reference" />
+        <!-- 无数据时布局 -->
+        <attr name="txLayoutEmpty" format="reference" />
+        <!-- 错误通用布局 -->
+        <attr name="txLayoutError" format="reference" />
+        <!-- 错误无网络布局 -->
+        <attr name="txLayoutErrorNoNetwork" format="reference" />
+        <!-- 加载更多布局 -->
+        <attr name="txLayoutLoadMore" format="reference" />
+        <!-- 加载更多完成布局 -->
+        <attr name="txLayoutLoadMoreComplete" format="reference" />
+
+        <!-- 下拉刷新 -->
+        <attr name="txEnabledPullToRefresh" format="boolean" />
+        <!-- 加载更多 -->
+        <attr name="txEnabledLoadMore" format="boolean" />
+
+        <!-- 无数据时文案 -->
+        <attr name="txEmptyMsg" format="string" />
+        <!-- 错误时文案 -->
+        <attr name="txErrorMsg" format="string" />
+
+        <!-- 布局类型 -->
+        <attr name="txLayoutType">
+            <flag name="linear" value="0x0" />
+            <flag name="grid" value="0x1" />
+        </attr>
+        <!-- 如果布局类型是grid的话,列数-->
+        <attr name="txGridSpanCount" format="integer" />
+        <!-- 是否支持滑动操作 -->
+        <attr name="txEnabledSwipe" format="boolean" />
+
+        <!-- 下拉Loading颜色 -->
+        <attr name="txPtrLoadingColor" format="color" />
+
+        <!-- 列表属性 -->
+        <attr name="txClipToPadding" format="boolean" />
+        <attr name="txPadding" format="dimension" />
+        <attr name="txPaddingTop" format="dimension" />
+        <attr name="txPaddingBottom" format="dimension" />
+        <attr name="txPaddingLeft" format="dimension" />
+        <attr name="txPaddingRight" format="dimension" />
+        <attr name="txOverScrollMode">
+            <flag name="always" value="0x0" />
+            <flag name="ifContentScrolls " value="0x1" />
+            <flag name="never" value="0x2" />
+        </attr>
+    </declare-styleable>
+</resources>

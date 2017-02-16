@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="TX_FT_MAX">18sp</dimen>
+    <dimen name="TX_FT_MED">16sp</dimen>
+    <dimen name="TX_FT_MAIN">14sp</dimen>
+    <dimen name="TX_FT_BODY">13sp</dimen>
+    <dimen name="TX_FT_SUB">12sp</dimen>
+    <dimen name="TX_FT_TINY">11sp</dimen>
+    <dimen name="TX_FT_TAG">10sp</dimen>
+
+    <dimen name="tx_cell_space_50">25dp</dimen>
+    <dimen name="tx_cell_space_40">20dp</dimen>
+    <dimen name="tx_cell_space_30">15dp</dimen>
+    <dimen name="tx_cell_space_20">10dp</dimen>
+    <dimen name="tx_cell_space_10">5dp</dimen>
+    <dimen name="tx_cell_space_5">2.5dp</dimen>
+
+    <dimen name="tx_progress_size">28dp</dimen>
+</resources>

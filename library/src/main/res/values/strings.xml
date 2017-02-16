@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">My Library</string>
+
+    <string name="tx_loading_hard">努力加载中…</string>
+    <string name="tx_load_error_no_network">无网络连接\n请检查网络后点击屏幕重试</string>
+    <string name="tx_load_error_filter_no_network">无网络连接</string>
+    <string name="tx_load_error_fail">获取数据失败 点击屏幕重试</string>
+    <string name="tx_load_error_filter_fail">获取数据失败</string>
+    <string name="tx_load_no_data">暂无相关数据</string>
+    <string name="tx_load_more_ing">正在加载更多数据…</string>
+    <string name="tx_load_more_no_data">没有更多了</string>
+    <string name="tx_load_more_reload">加载失败，点击重新获取</string>
+</resources>

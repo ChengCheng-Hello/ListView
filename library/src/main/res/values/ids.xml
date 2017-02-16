@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TXListView使用-->
+    <item name="tx_ids_list_empty_msg" type="id" />
+    <item name="tx_ids_list_error_msg" type="id" />
+    <item name="tx_ids_list_reload" type="id" />
+</resources>

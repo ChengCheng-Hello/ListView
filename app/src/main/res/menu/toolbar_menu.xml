@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_normal"
+        android:title="normal"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_error"
+        android:title="error"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_empty"
+        android:title="empty"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_loadmore_error"
+        android:title="load more error"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_loadmore_empty"
+        android:title="load more empty"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_add_font"
+        android:title="addFront"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_add_one"
+        android:title="addOne"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_insert"
+        android:title="insert"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_update"
+        android:title="replace"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_remove"
+        android:title="remove"
+        app:showAsAction="never" />
+</menu>

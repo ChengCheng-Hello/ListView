@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="tx_listview">
+        <item name="txLayoutLoading">@layout/tx_layout_listview_loading</item>
+        <item name="txLayoutEmpty">@layout/tx_layout_listview_empty</item>
+        <item name="txLayoutError">@layout/tx_layout_listview_error</item>
+        <item name="txLayoutLoadMore">@layout/tx_layout_listview_load_more</item>
+        <item name="txLayoutLoadMoreComplete">@layout/tx_layout_listview_load_more_complete</item>
+        <item name="txPtrLoadingColor">@color/TX_CO_BLUESEC</item>
+        <item name="txEmptyMsg">@string/tx_load_no_data</item>
+        <item name="txErrorMsg">@string/tx_load_error_fail</item>
+    </style>
+</resources>

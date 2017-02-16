@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/tx_ids_list_reload"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/tx_ids_list_error_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/tx_ic_error" />
+
+    <TextView
+        android:id="@+id/tx_ids_list_error_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.1"
+        android:padding="@dimen/tx_cell_space_20"
+        android:text="@string/tx_load_error_fail"
+        android:textColor="@color/TX_CO_BNINE"
+        android:textSize="@dimen/TX_FT_MAIN" />
+</LinearLayout>
