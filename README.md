@@ -67,9 +67,6 @@
     // 刷新列表，如筛选刷新
     void refresh();
 
-    // 清除数据并刷新列表
-    // void clearDataAndNotify();
-
     // 首次or下拉刷新 添加数据
     void setAllData(List<T> listData);
 
@@ -87,9 +84,6 @@
 
     // 插入多条数据
     void insertData(List<T> listData, int position);
-
-    // 替换一条数据
-    void replaceData(T data, T posData);
 
     // 移除数据，注意：因为是根据data进行删除，data需要重写equals方法。
     void removeData(T data);
