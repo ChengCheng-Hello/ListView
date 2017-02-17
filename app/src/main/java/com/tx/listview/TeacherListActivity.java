@@ -2,14 +2,19 @@ package com.tx.listview;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tx.listview.base.TXBaseListActivity;
 import com.tx.listview.base.cell.TXBaseListCell;
+import com.tx.listview.base.listener.TXOnSectionHeaderListener;
 import com.tx.listview.cell.TXTeacherCell;
+import com.tx.listview.cell.TXTeacherGroupCell;
 import com.tx.listview.model.TXTeacherModel;
 
 import java.util.ArrayList;
@@ -17,7 +22,7 @@ import java.util.List;
 
 import static android.R.attr.data;
 
-public class TeacherListActivity extends TXBaseListActivity<TXTeacherModel> {
+public class TeacherListActivity extends TXBaseListActivity<TXTeacherModel> implements TXOnSectionHeaderListener<TXTeacherModel> {
 
     private static final String TAG = "TeacherListActivity";
 
@@ -29,6 +34,7 @@ public class TeacherListActivity extends TXBaseListActivity<TXTeacherModel> {
 
     private int mType = TYPE_NORMAL;
     private List<TXTeacherModel> list;
+    private TextView mTvSection;
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, TeacherListActivity.class);
@@ -49,8 +55,52 @@ public class TeacherListActivity extends TXBaseListActivity<TXTeacherModel> {
         for (int i = 0; i < 30; i++) {
             TXTeacherModel txTeacherModel = new TXTeacherModel();
             txTeacherModel.name = "teacher name " + i;
+            txTeacherModel.type = 0;
+            if (i < 10) {
+                txTeacherModel.tag = "A";
+            } else if (i < 20) {
+                txTeacherModel.tag = "B";
+            } else if (i < 23) {
+                txTeacherModel.tag = "C";
+            } else {
+                txTeacherModel.tag = "D";
+            }
             list.add(txTeacherModel);
         }
+
+        List<TXTeacherModel> newList = new ArrayList<>();
+
+        TXTeacherModel preItem = null;
+
+        for (TXTeacherModel item : list) {
+            if (preItem == null) {
+                TXTeacherModel model = new TXTeacherModel();
+                model.tag = item.tag;
+                model.type = 10;
+                newList.add(model);
+            } else {
+                if (!item.tag.equals(preItem.tag)) {
+                    TXTeacherModel model = new TXTeacherModel();
+                    model.tag = item.tag;
+                    model.type = 10;
+                    newList.add(model);
+                }
+            }
+
+            newList.add(item);
+
+            preItem = item;
+        }
+
+        list = newList;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mTvSection = (TextView) findViewById(R.id.tv_section);
+        mListView.setOnSectionHeaderListener(this);
     }
 
     @Override
@@ -102,8 +152,21 @@ public class TeacherListActivity extends TXBaseListActivity<TXTeacherModel> {
     }
 
     @Override
+    public int getCellViewType(@Nullable TXTeacherModel data) {
+        if (data == null) {
+            return 0;
+        } else {
+            return data.type;
+        }
+    }
+
+    @Override
     public TXBaseListCell<TXTeacherModel> onCreateCell(int viewType) {
-        return new TXTeacherCell();
+        if (viewType == 0) {
+            return new TXTeacherCell();
+        } else {
+            return new TXTeacherGroupCell();
+        }
     }
 
     @Override
@@ -174,5 +237,20 @@ public class TeacherListActivity extends TXBaseListActivity<TXTeacherModel> {
                 return false;
             }
         });
+    }
+
+    @Override
+    public TextView getSectionTextView() {
+        return mTvSection;
+    }
+
+    @Override
+    public int getSectionCellViewType() {
+        return 10;
+    }
+
+    @Override
+    public String getSectionContent(TXTeacherModel txTeacherModel) {
+        return txTeacherModel.tag;
     }
 }

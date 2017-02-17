@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 带更多功能的ListView -->
-    <declare-styleable name="TXPTRAndLMBase">
+    <declare-styleable name="TXListView">
         <!-- 布局页面 -->
         <attr name="txMainLayoutId" format="reference" />
         <!-- 数据头部布局 -->
@@ -38,6 +38,8 @@
         <attr name="txGridSpanCount" format="integer" />
         <!-- 是否支持滑动操作 -->
         <attr name="txEnabledSwipe" format="boolean" />
+        <!-- 是否支持悬停section -->
+        <attr name="txEnabledSection" format="boolean" />
 
         <!-- 下拉Loading颜色 -->
         <attr name="txPtrLoadingColor" format="color" />

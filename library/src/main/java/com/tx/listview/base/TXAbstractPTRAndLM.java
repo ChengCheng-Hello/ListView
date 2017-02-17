@@ -18,7 +18,7 @@ import com.tx.listview.base.listener.TXOnCreateHeaderViewListener;
 import com.tx.listview.base.listener.TXOnGetCellViewTypeListener;
 import com.tx.listview.base.listener.TXOnLoadMoreListener;
 import com.tx.listview.base.listener.TXOnRefreshListener;
-import com.tx.listview.base.listener.TXOnScrollListener;
+import com.tx.listview.base.listener.TXOnSectionHeaderListener;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -48,8 +48,8 @@ public abstract class TXAbstractPTRAndLM<T> extends FrameLayout implements TXBas
     protected TXOnCreateErrorViewListener mOnCreateErrorViewListener;
     // 创建头布局事件
     protected TXOnCreateHeaderViewListener mOnCreateHeaderViewListener;
-    // 滚动监听
-    protected TXOnScrollListener mOnScrollListener;
+    // 列表section
+    protected TXOnSectionHeaderListener<T> mOnSectionHeaderListener;
 
     private int mLoadingLayoutId;
     private int mEmptyLayoutId;
@@ -68,6 +68,7 @@ public abstract class TXAbstractPTRAndLM<T> extends FrameLayout implements TXBas
     private int mGridSpanCount;
 
     private boolean mEnabledSwipe;
+    private boolean mEnabledSection;
 
     @ColorInt
     private int mPtrLoadingColor;
@@ -107,35 +108,36 @@ public abstract class TXAbstractPTRAndLM<T> extends FrameLayout implements TXBas
     public TXAbstractPTRAndLM(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.TXPTRAndLMBase);
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.TXListView);
         if (a != null) {
-            mLoadingLayoutId = a.getResourceId(R.styleable.TXPTRAndLMBase_txLayoutLoading, R.layout.tx_layout_listview_loading);
-            mEmptyLayoutId = a.getResourceId(R.styleable.TXPTRAndLMBase_txLayoutEmpty, R.layout.tx_layout_listview_empty);
-            mErrorLayoutId = a.getResourceId(R.styleable.TXPTRAndLMBase_txLayoutError, R.layout.tx_layout_listview_error);
-            mErrorNoNetworkLayoutId = a.getResourceId(R.styleable.TXPTRAndLMBase_txLayoutErrorNoNetwork, R.layout.tx_layout_listview_error_no_network);
-            mLoadingMoreLayoutId = a.getResourceId(R.styleable.TXPTRAndLMBase_txLayoutLoadMore, R.layout.tx_layout_listview_load_more);
-            mLoadMoreCompleteLayoutId = a.getResourceId(R.styleable.TXPTRAndLMBase_txLayoutLoadMoreComplete, R.layout.tx_layout_listview_load_more_complete);
-            mHeaderLayoutId = a.getResourceId(R.styleable.TXPTRAndLMBase_txLayoutHeader, 0);
+            mLoadingLayoutId = a.getResourceId(R.styleable.TXListView_txLayoutLoading, R.layout.tx_layout_listview_loading);
+            mEmptyLayoutId = a.getResourceId(R.styleable.TXListView_txLayoutEmpty, R.layout.tx_layout_listview_empty);
+            mErrorLayoutId = a.getResourceId(R.styleable.TXListView_txLayoutError, R.layout.tx_layout_listview_error);
+            mErrorNoNetworkLayoutId = a.getResourceId(R.styleable.TXListView_txLayoutErrorNoNetwork, R.layout.tx_layout_listview_error_no_network);
+            mLoadingMoreLayoutId = a.getResourceId(R.styleable.TXListView_txLayoutLoadMore, R.layout.tx_layout_listview_load_more);
+            mLoadMoreCompleteLayoutId = a.getResourceId(R.styleable.TXListView_txLayoutLoadMoreComplete, R.layout.tx_layout_listview_load_more_complete);
+            mHeaderLayoutId = a.getResourceId(R.styleable.TXListView_txLayoutHeader, 0);
 
-            mEnabledLoadMore = a.getBoolean(R.styleable.TXPTRAndLMBase_txEnabledLoadMore, true);
-            mEnabledPullToRefresh = a.getBoolean(R.styleable.TXPTRAndLMBase_txEnabledPullToRefresh, true);
+            mEnabledLoadMore = a.getBoolean(R.styleable.TXListView_txEnabledLoadMore, true);
+            mEnabledPullToRefresh = a.getBoolean(R.styleable.TXListView_txEnabledPullToRefresh, true);
 
-            mEmptyMsg = a.getString(R.styleable.TXPTRAndLMBase_txEmptyMsg);
-            mErrorMSg = a.getString(R.styleable.TXPTRAndLMBase_txErrorMsg);
+            mEmptyMsg = a.getString(R.styleable.TXListView_txEmptyMsg);
+            mErrorMSg = a.getString(R.styleable.TXListView_txErrorMsg);
 
-            mLayoutType = a.getInt(R.styleable.TXPTRAndLMBase_txLayoutType, LAYOUT_TYPE_LINEAR);
-            mGridSpanCount = a.getInt(R.styleable.TXPTRAndLMBase_txGridSpanCount, 1);
+            mLayoutType = a.getInt(R.styleable.TXListView_txLayoutType, LAYOUT_TYPE_LINEAR);
+            mGridSpanCount = a.getInt(R.styleable.TXListView_txGridSpanCount, 1);
 
-            mEnabledSwipe = a.getBoolean(R.styleable.TXPTRAndLMBase_txEnabledSwipe, false);
+            mEnabledSwipe = a.getBoolean(R.styleable.TXListView_txEnabledSwipe, false);
+            mEnabledSection = a.getBoolean(R.styleable.TXListView_txEnabledSection, false);
 
-            mPtrLoadingColor = a.getColor(R.styleable.TXPTRAndLMBase_txPtrLoadingColor, ContextCompat.getColor(context, R.color.colorPrimary));
-            mClipToPadding = a.getBoolean(R.styleable.TXPTRAndLMBase_txClipToPadding, true);
-            mPadding = a.getDimensionPixelOffset(R.styleable.TXPTRAndLMBase_txPadding, -1);
-            mPaddingTop = a.getDimensionPixelOffset(R.styleable.TXPTRAndLMBase_txPaddingTop, 0);
-            mPaddingBottom = a.getDimensionPixelOffset(R.styleable.TXPTRAndLMBase_txPaddingBottom, 0);
-            mPaddingRight = a.getDimensionPixelOffset(R.styleable.TXPTRAndLMBase_txPaddingRight, 0);
-            mPaddingLeft = a.getDimensionPixelOffset(R.styleable.TXPTRAndLMBase_txPaddingLeft, 0);
-            mOverScroll = a.getInt(R.styleable.TXPTRAndLMBase_txOverScrollMode, OVER_SCROLL_ALWAYS);
+            mPtrLoadingColor = a.getColor(R.styleable.TXListView_txPtrLoadingColor, ContextCompat.getColor(context, R.color.colorPrimary));
+            mClipToPadding = a.getBoolean(R.styleable.TXListView_txClipToPadding, true);
+            mPadding = a.getDimensionPixelOffset(R.styleable.TXListView_txPadding, -1);
+            mPaddingTop = a.getDimensionPixelOffset(R.styleable.TXListView_txPaddingTop, 0);
+            mPaddingBottom = a.getDimensionPixelOffset(R.styleable.TXListView_txPaddingBottom, 0);
+            mPaddingRight = a.getDimensionPixelOffset(R.styleable.TXListView_txPaddingRight, 0);
+            mPaddingLeft = a.getDimensionPixelOffset(R.styleable.TXListView_txPaddingLeft, 0);
+            mOverScroll = a.getInt(R.styleable.TXListView_txOverScrollMode, OVER_SCROLL_ALWAYS);
 
             a.recycle();
         }
@@ -200,8 +202,8 @@ public abstract class TXAbstractPTRAndLM<T> extends FrameLayout implements TXBas
         this.mOnCreateHeaderViewListener = listener;
     }
 
-    public void setOnScrollListener(TXOnScrollListener listener) {
-        mOnScrollListener = listener;
+    public void setOnSectionHeaderListener(TXOnSectionHeaderListener<T> listener) {
+        this.mOnSectionHeaderListener = listener;
     }
 
     public void setLoadMoreEnabled(boolean loadMoreEnabled) {
@@ -254,6 +256,10 @@ public abstract class TXAbstractPTRAndLM<T> extends FrameLayout implements TXBas
 
     public boolean isEnabledSwipe() {
         return mEnabledSwipe;
+    }
+
+    public boolean isEnabledSection() {
+        return mEnabledSection;
     }
 
     @ColorInt

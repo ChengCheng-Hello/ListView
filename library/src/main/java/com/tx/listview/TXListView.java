@@ -27,7 +27,6 @@ import com.tx.listview.base.cell.TXBaseSwipeListCell;
 import com.tx.listview.base.listener.TXOnLoadMoreListener;
 import com.tx.listview.base.listener.TXOnLoadingListener;
 import com.tx.listview.base.listener.TXOnRefreshListener;
-import com.tx.listview.base.listener.TXOnScrollListener;
 
 import java.util.List;
 
@@ -42,6 +41,7 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
     private RecyclerView mRv;
     private RecyclerView.LayoutManager mLayoutManager;
     private boolean mHasHeader;
+    private RecyclerView.OnScrollListener mOnScrollListener;
 
     public TXListView(Context context) {
         super(context);
@@ -54,7 +54,7 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
     public TXListView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-    
+
     @Override
     protected void initView(Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.tx_layout_default_list_recycleview, this);
@@ -117,6 +117,84 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                 mPullToRefreshView.setEnabled(canPtr);
             }
         });
+
+        if (isEnabledSection()) {
+            mOnScrollListener = new RecyclerView.OnScrollListener() {
+
+                private int mTipHeight;
+                private int mCurrentPos;
+
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+
+                    if (mOnSectionHeaderListener == null) {
+                        return;
+                    }
+
+                    TextView sectionView = mOnSectionHeaderListener.getSectionTextView();
+                    if (sectionView == null) {
+                        return;
+                    }
+
+                    mTipHeight = sectionView.getHeight();
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                    if (dy == 0) {
+                        return;
+                    }
+
+                    if (mOnSectionHeaderListener == null) {
+                        return;
+                    }
+
+                    TextView sectionView = mOnSectionHeaderListener.getSectionTextView();
+                    if (sectionView == null) {
+                        return;
+                    }
+
+                    sectionView.setVisibility(View.VISIBLE);
+
+                    int itemViewType = mAdapter.getItemViewType(mCurrentPos + 1);
+                    if (itemViewType == mOnSectionHeaderListener.getSectionCellViewType()) {
+                        View view = mLayoutManager.findViewByPosition(mCurrentPos + 1);
+                        if (view != null) {
+                            if (view.getTop() <= mTipHeight) {
+                                sectionView.setY(view.getTop() - mTipHeight);
+                            } else {
+                                sectionView.setY(0);
+                            }
+                        }
+                    }
+
+                    if (mCurrentPos != ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition()) {
+                        mCurrentPos = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
+
+                        sectionView.setY(0);
+
+                        List<T> allData = mAdapter.getAllData();
+                        if (allData != null && mCurrentPos < allData.size()) {
+                            sectionView.setText(mOnSectionHeaderListener.getSectionContent(allData.get(mCurrentPos)));
+                        }
+                    }
+                }
+            };
+
+            mRv.addOnScrollListener(mOnScrollListener);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mOnScrollListener != null) {
+            mRv.removeOnScrollListener(mOnScrollListener);
+            mOnScrollListener = null;
+        }
     }
 
     private void setRefreshing(final boolean refreshing) {
@@ -228,30 +306,15 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
     }
 
 
-    @Override
-    public void setOnScrollListener(TXOnScrollListener listener) {
-        super.setOnScrollListener(listener);
-
+    public void addOnScrollListener(RecyclerView.OnScrollListener listener) {
         if (mRv != null) {
-            mRv.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
+            mRv.addOnScrollListener(listener);
+        }
+    }
 
-                    if (mOnScrollListener != null) {
-                        mOnScrollListener.onScrolled(dy);
-                    }
-                }
-
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-
-                    if (mOnScrollListener != null) {
-                        mOnScrollListener.onScrollStateChanged(newState);
-                    }
-                }
-            });
+    public void removeOnScrollListener(RecyclerView.OnScrollListener listener) {
+        if (mRv != null) {
+            mRv.removeOnScrollListener(listener);
         }
     }
 

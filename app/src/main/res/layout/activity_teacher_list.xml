@@ -15,12 +15,27 @@
         android:layout_height="48dp"
         android:background="@color/colorPrimary" />
 
-    <com.tx.listview.TXListView
-        android:id="@+id/listView"
-        style="@style/tx_listview"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:txEnabledLoadMore="true"
-        app:txEnabledPullToRefresh="true" />
+        android:layout_height="match_parent">
 
+        <com.tx.listview.TXListView
+            android:id="@+id/listView"
+            style="@style/tx_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:txEnabledLoadMore="true"
+            app:txEnabledPullToRefresh="true"
+            app:txEnabledSection="true" />
+
+        <TextView
+            android:id="@+id/tv_section"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:background="@color/TX_CO_RED"
+            android:gravity="center"
+            android:textColor="@color/TX_CO_WHITE"
+            android:textSize="12sp"
+            android:visibility="invisible" />
+    </FrameLayout>
 </LinearLayout>
