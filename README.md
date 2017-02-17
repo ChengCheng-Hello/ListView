@@ -99,19 +99,19 @@
 ```
 
 ### 支持两种cell
-1. 普通cell，实现`TXBaseListCellV2<T>`。
-2. 滑动cell，实现`TXBaseSwipeListCellV2<T>`。
+1. 普通cell，实现`TXBaseListCell<T>`。
+2. 滑动cell，实现`TXBaseSwipeListCell<T>`。
 
-### `TXBaseListActivityV2<T>` 集成TXListView的Activity
+### `TXBaseListActivity<T>` 集成TXListView的Activity
 - 可替换`bindContentView`: 布局id。
 - 可替换`getListViewId`: TXListView的id。
 - `initData`: 子类需要在初始化list相关类之前初始其他数据的可以重写这个方法。
 - `onLoadMore(T lastData)`: 加载更多回调，`lastData`最后一条数据。
 - `onRefresh`: 下拉刷新回调。
-- `TXBaseListCellV2<T> onCreateCell(int viewType)`: 用于创建相应`viewType`对应的cell。
-- `getItemViewType(T data)`: 设置不同的type。`注意：data可能为空`
-- `onItemClick`: 点击事件回调。
-- `onItemLongClick`: 长按事件回调。
+- `TXBaseListCell<T> onCreateCell(int viewType)`: 用于创建相应`viewType`对应的cell。
+- `getCellViewType(T data)`: 设置不同的type。`注意：data可能为空`
+- `onCellClick`: 点击事件回调。
+- `onCellLongClick`: 长按事件回调。
 - `onCreateEmptyView`: 创建空布局的回调。
 - `onCreateErrorView`: 创建错误布局的回调。
 - `onCreateHeaderView`: 创建Header布局的回调。
@@ -140,7 +140,7 @@ if (result.code == TXErrorConst.ERROR_CODE_SUCCESS) {
 
 ```xml
     <!-- 列表样式 -->
-    <style name="tx_list_u2">
+    <style name="tx_listview">
         <item name="txLayoutLoading">@layout/tx_layout_lv_loading_u2</item>
         <item name="txLayoutEmpty">@layout/tx_layout_lv_empty_u2</item>
         <item name="txLayoutError">@layout/tx_layout_lv_error_u2</item>
