@@ -52,7 +52,7 @@ public class TeacherListActivity extends TXBaseListActivity<TXTeacherModel> impl
         initTitle();
 
         list = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 300; i++) {
             TXTeacherModel txTeacherModel = new TXTeacherModel();
             txTeacherModel.name = "teacher name " + i;
             txTeacherModel.type = 0;

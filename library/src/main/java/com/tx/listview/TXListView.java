@@ -45,7 +45,7 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
     private boolean mHasHeader;
     private RecyclerView.OnScrollListener mOnScrollListener;
     private static final Object mLock = new Object();
-    protected View mSectionView;
+    private View mSectionView;
 
     public TXListView(Context context) {
         super(context);
@@ -208,6 +208,9 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                                 return;
                             }
                             mOnSectionHeaderListener.setSectionData(allData.get(mCurrentPos));
+                            if (!mSectionView.isShown()) {
+                                mSectionView.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 }
