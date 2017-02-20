@@ -99,7 +99,6 @@ public class TeacherListActivity extends TXBaseListActivity<TXTeacherModel> impl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mTvSection = (TextView) findViewById(R.id.tv_section);
         mListView.setOnSectionHeaderListener(this);
     }
 
@@ -240,17 +239,22 @@ public class TeacherListActivity extends TXBaseListActivity<TXTeacherModel> impl
     }
 
     @Override
-    public TextView getSectionTextView() {
-        return mTvSection;
+    public int getSectionLayoutId() {
+        return R.layout.tx_item_teacher_group;
     }
 
     @Override
-    public int getSectionCellViewType() {
+    public void initSectionViews(View view) {
+        mTvSection = (TextView) view.findViewById(R.id.tv_tip);
+    }
+
+    @Override
+    public int getSectionViewType() {
         return 10;
     }
 
     @Override
-    public String getSectionContent(TXTeacherModel txTeacherModel) {
-        return txTeacherModel.tag;
+    public void setSectionData(TXTeacherModel txTeacherModel) {
+        mTvSection.setText(txTeacherModel.tag);
     }
 }

@@ -10,6 +10,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import com.tx.listview.base.cell.TXBaseSwipeListCell;
 import com.tx.listview.base.listener.TXOnLoadMoreListener;
 import com.tx.listview.base.listener.TXOnLoadingListener;
 import com.tx.listview.base.listener.TXOnRefreshListener;
+import com.tx.listview.base.listener.TXOnSectionHeaderListener;
 
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
     private RecyclerView.LayoutManager mLayoutManager;
     private boolean mHasHeader;
     private RecyclerView.OnScrollListener mOnScrollListener;
+    private static final Object mLock = new Object();
 
     public TXListView(Context context) {
         super(context);
@@ -117,27 +120,41 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                 mPullToRefreshView.setEnabled(canPtr);
             }
         });
+    }
+
+    @Override
+    public void setOnSectionHeaderListener(TXOnSectionHeaderListener<T> listener) {
+        super.setOnSectionHeaderListener(listener);
 
         if (isEnabledSection()) {
+            if (mOnSectionHeaderListener == null) {
+                return;
+            }
+
+            if (mOnSectionHeaderListener.getSectionLayoutId() <= 0) {
+                return;
+            }
+
+            FrameLayout flSection = (FrameLayout) findViewById(R.id.fl_section);
+            final View mSectionView = LayoutInflater.from(getContext()).inflate(mOnSectionHeaderListener.getSectionLayoutId(), null, false);
+            if (mSectionView == null) {
+                return;
+            }
+            mOnSectionHeaderListener.initSectionViews(mSectionView);
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            flSection.addView(mSectionView, layoutParams);
+            mSectionView.setVisibility(View.INVISIBLE);
+
             mOnScrollListener = new RecyclerView.OnScrollListener() {
 
-                private int mTipHeight;
+                private int mSectionHeight;
                 private int mCurrentPos;
 
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
 
-                    if (mOnSectionHeaderListener == null) {
-                        return;
-                    }
-
-                    TextView sectionView = mOnSectionHeaderListener.getSectionTextView();
-                    if (sectionView == null) {
-                        return;
-                    }
-
-                    mTipHeight = sectionView.getHeight();
+                    mSectionHeight = mSectionView.getHeight();
                 }
 
                 @Override
@@ -148,25 +165,26 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                         return;
                     }
 
-                    if (mOnSectionHeaderListener == null) {
-                        return;
+                    if (!mSectionView.isShown()) {
+                        synchronized (mLock) {
+                            List<T> allData = mAdapter.getAllData();
+                            int size = allData.size();
+                            if (size < 1) {
+                                return;
+                            }
+                            mOnSectionHeaderListener.setSectionData(allData.get(0));
+                            mSectionView.setVisibility(View.VISIBLE);
+                        }
                     }
-
-                    TextView sectionView = mOnSectionHeaderListener.getSectionTextView();
-                    if (sectionView == null) {
-                        return;
-                    }
-
-                    sectionView.setVisibility(View.VISIBLE);
 
                     int itemViewType = mAdapter.getItemViewType(mCurrentPos + 1);
-                    if (itemViewType == mOnSectionHeaderListener.getSectionCellViewType()) {
+                    if (itemViewType == mOnSectionHeaderListener.getSectionViewType()) {
                         View view = mLayoutManager.findViewByPosition(mCurrentPos + 1);
                         if (view != null) {
-                            if (view.getTop() <= mTipHeight) {
-                                sectionView.setY(view.getTop() - mTipHeight);
+                            if (view.getTop() <= mSectionHeight) {
+                                mSectionView.setY(view.getTop() - mSectionHeight);
                             } else {
-                                sectionView.setY(0);
+                                mSectionView.setY(0);
                             }
                         }
                     }
@@ -174,11 +192,15 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                     if (mCurrentPos != ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition()) {
                         mCurrentPos = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
 
-                        sectionView.setY(0);
+                        mSectionView.setY(0);
 
-                        List<T> allData = mAdapter.getAllData();
-                        if (allData != null && mCurrentPos < allData.size()) {
-                            sectionView.setText(mOnSectionHeaderListener.getSectionContent(allData.get(mCurrentPos)));
+                        synchronized (mLock) {
+                            List<T> allData = mAdapter.getAllData();
+                            int size = allData.size();
+                            if (mCurrentPos < 0 || mCurrentPos >= size) {
+                                return;
+                            }
+                            mOnSectionHeaderListener.setSectionData(allData.get(mCurrentPos));
                         }
                     }
                 }

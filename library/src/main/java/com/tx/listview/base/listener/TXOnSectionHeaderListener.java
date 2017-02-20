@@ -1,6 +1,6 @@
 package com.tx.listview.base.listener;
 
-import android.widget.TextView;
+import android.view.View;
 
 /**
  * 设置列表分组悬停回调
@@ -10,24 +10,30 @@ import android.widget.TextView;
 public interface TXOnSectionHeaderListener<T> {
 
     /**
-     * 分组悬停的view，目前只能是TextView
+     * 悬停的布局文件 id
      *
      * @return
      */
-    TextView getSectionTextView();
+    int getSectionLayoutId();
+
+    /**
+     * 初始化悬停的各个子 view。
+     *
+     * @param view 根view
+     */
+    void initSectionViews(View view);
 
     /**
      * 分组悬停Cell的类型
      *
      * @return
      */
-    int getSectionCellViewType();
+    int getSectionViewType();
 
     /**
      * 悬停区域显示的内容
      *
      * @param t
-     * @return
      */
-    String getSectionContent(T t);
+    void setSectionData(T t);
 }
