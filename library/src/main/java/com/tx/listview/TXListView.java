@@ -61,7 +61,13 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
 
     @Override
     protected void initView(Context context) {
-        View view = LayoutInflater.from(context).inflate(R.layout.tx_layout_default_list_recycleview, this);
+        View view;
+        if (isEnabledSection()) {
+            view = LayoutInflater.from(context).inflate(R.layout.tx_layout_section_list_recycleview, this);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.tx_layout_default_list_recycleview, this);
+        }
+
         mPullToRefreshView = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         mPullToRefreshView.setColorSchemeColors(getLoadingColor());
         // 第一次加载的时候不显示
