@@ -206,19 +206,27 @@ public class TeacherListActivity extends TXBaseListActivity<TXTeacherModel> impl
                     case R.id.action_empty:
                         mType = TYPE_EMPTY;
                         break;
-                    case R.id.action_add_font:
+                    case R.id.action_add_font: {
                         List<TXTeacherModel> list = new ArrayList<>();
                         for (int i = 0; i < 3; i++) {
-                            list.add(new TXTeacherModel("this is appendData to front" + i));
+                            TXTeacherModel txTeacherModel = new TXTeacherModel("this is appendData to front" + i);
+                            txTeacherModel.tag = "A";
+                            txTeacherModel.type = 0;
+                            list.add(txTeacherModel);
                         }
                         mListView.insertDataToFront(list);
-                        break;
+                    }
+                    break;
                     case R.id.action_add_one:
                         mListView.appendData(new TXTeacherModel("this is appendData one"));
                         break;
-                    case R.id.action_insert:
-                        mListView.insertData(new TXTeacherModel("this is insertData to 5"), 5);
+                    case R.id.action_insert: {
+                        TXTeacherModel txTeacherModel = new TXTeacherModel("this is insertData to 5");
+                        txTeacherModel.tag = "A";
+                        txTeacherModel.type = 0;
+                        mListView.insertData(txTeacherModel, 5);
                         break;
+                    }
                     case R.id.action_update: {
                         List<TXTeacherModel> allData = mListView.getAllData();
                         TXTeacherModel txTeacherModel = allData.get(0);

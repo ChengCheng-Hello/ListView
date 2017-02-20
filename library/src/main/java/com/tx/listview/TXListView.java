@@ -45,6 +45,7 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
     private boolean mHasHeader;
     private RecyclerView.OnScrollListener mOnScrollListener;
     private static final Object mLock = new Object();
+    protected View mSectionView;
 
     public TXListView(Context context) {
         super(context);
@@ -136,7 +137,7 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
             }
 
             FrameLayout flSection = (FrameLayout) findViewById(R.id.fl_section);
-            final View mSectionView = LayoutInflater.from(getContext()).inflate(mOnSectionHeaderListener.getSectionLayoutId(), null, false);
+            mSectionView = LayoutInflater.from(getContext()).inflate(mOnSectionHeaderListener.getSectionLayoutId(), null, false);
             if (mSectionView == null) {
                 return;
             }
@@ -491,6 +492,10 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                 listView.mOnCreateEmptyViewListener.onCreateEmptyView(view);
             }
 
+            if (listView.isEnabledSection() && listView.mSectionView != null) {
+                listView.mSectionView.setVisibility(View.INVISIBLE);
+            }
+
             return view;
         }
 
@@ -524,6 +529,10 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
 
             if (listView.mOnCreateErrorViewListener != null) {
                 listView.mOnCreateErrorViewListener.onCreateErrorView(view, errorCode, message);
+            }
+
+            if (listView.isEnabledSection() && listView.mSectionView != null) {
+                listView.mSectionView.setVisibility(View.INVISIBLE);
             }
 
             return view;
