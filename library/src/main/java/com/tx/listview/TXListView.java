@@ -166,14 +166,14 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                         return;
                     }
 
-                    if (!mSectionView.isShown()) {
+                    if (!mSectionView.isShown() && mCurrentPos == 0) {
                         synchronized (mLock) {
                             List<T> allData = mAdapter.getAllData();
                             int size = allData.size();
                             if (size < 1) {
                                 return;
                             }
-                            mOnSectionHeaderListener.setSectionData(allData.get(0));
+                            mOnSectionHeaderListener.setSectionData(allData.get(mCurrentPos));
                             mSectionView.setVisibility(View.VISIBLE);
                         }
                     }
