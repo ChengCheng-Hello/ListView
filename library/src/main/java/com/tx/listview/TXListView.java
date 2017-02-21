@@ -168,7 +168,12 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
 
-                    if (dy == 0) {
+                    if (mOnSectionHeaderListener == null) {
+                        return;
+                    }
+
+                    if (isEmpty()) {
+                        mSectionView.setVisibility(View.INVISIBLE);
                         return;
                     }
 
@@ -501,10 +506,6 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                 listView.mOnCreateEmptyViewListener.onCreateEmptyView(view);
             }
 
-            if (listView.isEnabledSection() && listView.mSectionView != null) {
-                listView.mSectionView.setVisibility(View.INVISIBLE);
-            }
-
             return view;
         }
 
@@ -538,10 +539,6 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
 
             if (listView.mOnCreateErrorViewListener != null) {
                 listView.mOnCreateErrorViewListener.onCreateErrorView(view, errorCode, message);
-            }
-
-            if (listView.isEnabledSection() && listView.mSectionView != null) {
-                listView.mSectionView.setVisibility(View.INVISIBLE);
             }
 
             return view;
