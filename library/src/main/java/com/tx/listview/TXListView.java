@@ -177,7 +177,7 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                         return;
                     }
 
-                    if (!mSectionView.isShown() && mCurrentPos == 0) {
+                    if (!mSectionView.isShown() && mCurrentPos == 0 && !mHasHeader) {
                         synchronized (mLock) {
                             List<T> allData = mAdapter.getAllData();
                             int size = allData.size();
@@ -187,6 +187,10 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                             mOnSectionHeaderListener.setSectionData(allData.get(mCurrentPos));
                             mSectionView.setVisibility(View.VISIBLE);
                         }
+                    }
+
+                    if (mCurrentPos == 0 && mHasHeader) {
+                        mSectionView.setVisibility(View.INVISIBLE);
                     }
 
                     int itemViewType = mAdapter.getItemViewType(mCurrentPos + 1);
@@ -204,6 +208,11 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                     if (mCurrentPos != ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition()) {
                         mCurrentPos = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
 
+                        if (mCurrentPos == 0 && mHasHeader) {
+                            mSectionView.setVisibility(View.INVISIBLE);
+                            return;
+                        }
+
                         mSectionView.setY(0);
 
                         synchronized (mLock) {
@@ -212,7 +221,14 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                             if (mCurrentPos < 0 || mCurrentPos >= size) {
                                 return;
                             }
-                            mOnSectionHeaderListener.setSectionData(allData.get(mCurrentPos));
+
+                            int location = mCurrentPos;
+                            if (mHasHeader && location > 1) {
+                                location--;
+                            }
+
+                            mOnSectionHeaderListener.setSectionData(allData.get(location));
+                            
                             if (!mSectionView.isShown()) {
                                 mSectionView.setVisibility(View.VISIBLE);
                             }
