@@ -1,6 +1,7 @@
 package com.tx.listview;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -125,6 +126,37 @@ public class TXListView<T> extends TXAbstractPTRAndLM<T> {
                 }
 
                 mPullToRefreshView.setEnabled(canPtr);
+            }
+        });
+    }
+
+    /**
+     * 设置底部内边距
+     *
+     * @param paddingBottom 底部内边距
+     */
+    public void setPaddingBottom(int paddingBottom) {
+        mRv.setClipToPadding(false);
+        mRv.setPadding(mRv.getPaddingLeft(), mRv.getPaddingTop(), mRv.getPaddingRight(), paddingBottom);
+    }
+
+    public void scrollToData(@NonNull final T data) {
+        this.post(new Runnable() {
+            @Override
+            public void run() {
+                List<T> allData = getAllData();
+                if (allData == null) {
+                    return;
+                }
+                int position = allData.indexOf(data);
+                if (position == -1) {
+                    return;
+                }
+                if (mHasHeader) {
+                    position = position + 1;
+                }
+                mRv.stopScroll();
+                ((LinearLayoutManager) mLayoutManager).scrollToPositionWithOffset(position, 0);
             }
         });
     }
